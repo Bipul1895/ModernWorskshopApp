@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "328191320098",
+    "firebase_url": "https://modernworkshopapp.firebaseio.com",
+    "project_id": "modernworkshopapp",
+    "storage_bucket": "modernworkshopapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328191320098:android:475c61f34b3f5f6cf2ea7b",
+        "android_client_info": {
+          "package_name": "com.example.modernworkshopapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328191320098-m76frofgrk5fnr3skdt7fthu1f1vb53t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.modernworkshopapp",
+            "certificate_hash": "96a5622f62d53ea87a62f8cf9cac523516017a7d"
+          }
+        },
+        {
+          "client_id": "328191320098-1mvcehi8v3mr29m3st47o0ef4ja5vp6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDVmQQWBxaX9-egZfHqWpp2Xrbc4QHgYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328191320098-1mvcehi8v3mr29m3st47o0ef4ja5vp6a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
