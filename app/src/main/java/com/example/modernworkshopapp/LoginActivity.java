@@ -11,14 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.modernworkshopapp.Model.Users;
+import com.example.modernworkshopapp.Prevalent.prevalent;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rey.material.widget.CheckBox;
+
+import io.paperdb.Paper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private String parentDbName="Users";
     private ProgressBar progressBar;
+    private CheckBox checkBoxRemMe;
+    private TextView adminLink, notAdminLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword=findViewById(R.id.login_password_input);
         loginButton=findViewById(R.id.login_btn);
         progressBar=findViewById(R.id.login_progress_bar);
+        checkBoxRemMe=findViewById(R.id.remember_me_chkbox);
+        adminLink=findViewById(R.id.admin_panel_link);
+        notAdminLink=findViewById(R.id.not_admin_panel_link);
+
+        Paper.init(this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +56,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        adminLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginButton.setText("Login Admin");
+                adminLink.setVisibility(View.INVISIBLE);
+                notAdminLink.setVisibility(View.VISIBLE);
+
+                parentDbName="Admins";
+
+            }
+        });
+
+        notAdminLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginButton.setText("Login");
+                adminLink.setVisibility(View.VISIBLE);
+                notAdminLink.setVisibility(View.INVISIBLE);
+
+                parentDbName="Users";
+
+            }
+        });
 
     }
 
@@ -69,6 +104,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void AllowAccessToAccount(final String email, final String password) {
+
+        if(checkBoxRemMe.isChecked()){
+            Paper.book().write(prevalent.userEmailKey, email);
+            Paper.book().write(prevalent.userPasswordKey, password);
+        }
+
+
         final DatabaseReference rootRef;
         rootRef= FirebaseDatabase.getInstance().getReference();
 
@@ -84,8 +126,14 @@ public class LoginActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(LoginActivity.this,"Log in Successful", Toast.LENGTH_SHORT).show();
                         finish();
-                        Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        if(parentDbName.equals("Users")) {
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                        }
+                        else if(parentDbName.equals("Admins")){
+                            Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                            startActivity(intent);
+                        }
                     }
                     else{
                         progressBar.setVisibility(View.INVISIBLE);
