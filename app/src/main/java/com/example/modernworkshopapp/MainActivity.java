@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseReference rootRef;
         rootRef = FirebaseDatabase.getInstance().getReference();
 
-        final String encodedEmail = EncodeEmail(email);
+        final String encodedEmail = LoginActivity.EncodeEmail(email);
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -83,10 +83,17 @@ public class MainActivity extends AppCompatActivity {
 
                     if (usersData.getEmail().equals(email) && usersData.getPassword().equals(password)) {
                         progressBar.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(MainActivity.this, "Log in Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
+                        if(parentDbName.equals("Users")) {
+                            prevalent.currentOnlineUser=usersData;
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                        }
+                        else if(parentDbName.equals("Admins")){
+                            Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+                            startActivity(intent);
+                        }
                         finish();
-                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                        startActivity(intent);
                     } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "Credentials are Incorrect", Toast.LENGTH_SHORT).show();
@@ -104,18 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-    }
-
-    private String EncodeEmail(String email) {
-        String encodedEmail = "";
-        for (int i = 0; i < email.length(); i++) {
-            if (email.charAt(i) == '.') {
-                encodedEmail = encodedEmail + '%';
-            } else {
-                encodedEmail = encodedEmail + email.charAt(i);
-            }
-        }
-        return encodedEmail;
     }
 
 

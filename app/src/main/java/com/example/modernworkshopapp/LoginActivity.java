@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                         if(parentDbName.equals("Users")) {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            prevalent.currentOnlineUser=usersData;
                             startActivity(intent);
                         }
                         else if(parentDbName.equals("Admins")){
@@ -156,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private String EncodeEmail(String email) {
+    public static String EncodeEmail(String email) {
         String encodedEmail="";
         for(int i=0;i<email.length();i++){
             if(email.charAt(i) == '.'){

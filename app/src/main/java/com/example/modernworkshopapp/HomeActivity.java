@@ -3,9 +3,11 @@ package com.example.modernworkshopapp;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.modernworkshopapp.Prevalent.prevalent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -21,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
 public class HomeActivity extends AppCompatActivity
@@ -56,6 +60,13 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView=navigationView.getHeaderView(0);
+        TextView userNameTextView=headerView.findViewById(R.id.user_profile_name);
+        CircleImageView profileImageView=headerView.findViewById(R.id.user_profile_image);
+
+        userNameTextView.setText(prevalent.currentOnlineUser.getName());
+
     }
 
     @Override
@@ -104,6 +115,9 @@ public class HomeActivity extends AppCompatActivity
 
         }
         else if (id == R.id.nav_settings) {
+
+            Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
+            startActivity(intent);
 
         }
         else if (id == R.id.nav_logout) {
