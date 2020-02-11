@@ -8,23 +8,29 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.modernworkshopapp.Prevalent.prevalent;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
     private StorageReference storageProfileImageRef;
     private String checker="";
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +60,10 @@ public class SettingsActivity extends AppCompatActivity {
         updateTextButton=findViewById(R.id.update_settings_tv);
         closeTextButton=findViewById(R.id.close_settings_tv);
         profileChangeTextButton=findViewById(R.id.profile_image_change_tv);
+
+        storageProfileImageRef= FirebaseStorage.getInstance().getReference().child("Profile pictures");
+
+        progressBar=findViewById(R.id.settings_progress_bar);
 
         userInfoDisplay(profileImageView, nameEditText, emailEditText);
 
@@ -71,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else{
                     updateOnlyUserInfo();
                 }
+
             }
         });
 
@@ -110,6 +123,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void updateOnlyUserInfo() {
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("Users");
+
+        HashMap<String, Object> userMap=new HashMap<>();
+        userMap.put("name", nameEditText.getText().toString());
+        userMap.put("email", emailEditText.getText().toString());
+        userMap.put("phone", phoneEditText.getText().toString());
+        ref.child(LoginActivity.EncodeEmail(prevalent.currentOnlineUser.getEmail())).updateChildren(userMap);
+
+        prevalent.currentOnlineUser.setName(nameEditText.getText().toString());
+        prevalent.currentOnlineUser.setEmail(emailEditText.getText().toString());
+        prevalent.currentOnlineUser.setPhone(phoneEditText.getText().toString());
+
+        startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
+
+        Toast.makeText(SettingsActivity.this, "Profile Info updated successfully", Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 
     private void userInfoSaved() {
@@ -123,14 +153,17 @@ public class SettingsActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(phoneEditText.getText().toString())){
             Toast.makeText(SettingsActivity.this, "Phone is mandatory",Toast.LENGTH_SHORT).show();
         }
-        else if(checker.equals("checked")){
+        else if(checker.equals("clicked")){
             uploadImage();
         }
+
 
 
     }
 
     private void uploadImage() {
+
+        progressBar.setVisibility(View.VISIBLE);
 
         if(imageUri!=null){
             final StorageReference fileRef=storageProfileImageRef
@@ -143,13 +176,52 @@ public class SettingsActivity extends AppCompatActivity {
                 public Object then(@NonNull Task task) throws Exception {
 
                     if(!task.isSuccessful()){
+                        Toast.makeText(SettingsActivity.this, "Sorry, an error occured", Toast.LENGTH_SHORT).show();
                         throw  task.getException();
                     }
 
                     return fileRef.getDownloadUrl();
                 }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Uri downloadUrl=task.getResult();
+                        myUrl=downloadUrl.toString();
+
+                        DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("Users");
+
+                        HashMap<String, Object> userMap=new HashMap<>();
+                        userMap.put("name", nameEditText.getText().toString());
+                        userMap.put("email", emailEditText.getText().toString());
+                        userMap.put("phone", phoneEditText.getText().toString());
+                        userMap.put("image", myUrl);
+                        ref.child(LoginActivity.EncodeEmail(prevalent.currentOnlineUser.getEmail())).updateChildren(userMap);
+
+                        prevalent.currentOnlineUser.setName(nameEditText.getText().toString());
+                        prevalent.currentOnlineUser.setEmail(emailEditText.getText().toString());
+                        prevalent.currentOnlineUser.setPhone(phoneEditText.getText().toString());
+                        prevalent.currentOnlineUser.setImage(myUrl);
+
+                        progressBar.setVisibility(View.INVISIBLE);
+
+                        Toast.makeText(SettingsActivity.this, "Profile Info updated successfully", Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(SettingsActivity.this, HomeActivity.class));
+
+                        finish();
+
+                    }
+                    else{
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(SettingsActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                }
             });
 
+        }
+        else{
+            Toast.makeText(SettingsActivity.this, "Image is not selected", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -172,6 +244,15 @@ public class SettingsActivity extends AppCompatActivity {
                         emailEditText.setText(email);
                         phoneEditText.setText(phone);
 
+                    }
+                    else{
+                        String name=dataSnapshot.child("name").getValue().toString();
+                        String email=dataSnapshot.child("email").getValue().toString();
+                        String phone=dataSnapshot.child("phone").getValue().toString();
+
+                        nameEditText.setText(name);
+                        emailEditText.setText(email);
+                        phoneEditText.setText(phone);
                     }
                 }
             }

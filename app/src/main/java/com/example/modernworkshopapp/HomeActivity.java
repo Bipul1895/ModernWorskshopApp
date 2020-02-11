@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -61,12 +62,13 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        View headerView=navigationView.getHeaderView(0);
-        TextView userNameTextView=headerView.findViewById(R.id.user_profile_name);
-        CircleImageView profileImageView=headerView.findViewById(R.id.user_profile_image);
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+        CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
         userNameTextView.setText(prevalent.currentOnlineUser.getName());
-
+        Picasso.get().load(prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        Log.d("Home : ", "picasso is called");
     }
 
     @Override
@@ -118,6 +120,7 @@ public class HomeActivity extends AppCompatActivity
 
             Intent intent=new Intent(HomeActivity.this, SettingsActivity.class);
             startActivity(intent);
+
 
         }
         else if (id == R.id.nav_logout) {
