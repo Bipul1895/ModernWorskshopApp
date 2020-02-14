@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.modernworkshopapp.Model.Admins;
 import com.example.modernworkshopapp.Model.Users;
 import com.example.modernworkshopapp.Prevalent.prevalent;
 import com.google.firebase.database.DataSnapshot;
@@ -108,6 +109,10 @@ public class LoginActivity extends AppCompatActivity {
         if(checkBoxRemMe.isChecked()){
             Paper.book().write(prevalent.userEmailKey, email);
             Paper.book().write(prevalent.userPasswordKey, password);
+
+//            prevalent.individual=parentDbName;
+            Paper.book().write(prevalent.individual, parentDbName);
+
         }
 
 
@@ -120,25 +125,43 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(parentDbName).child(encodedEmail).exists()){
-                    Users usersData=dataSnapshot.child(parentDbName).child(encodedEmail).getValue(Users.class);
+                    if(parentDbName.equals("Users")) {
+                        Users usersData = dataSnapshot.child(parentDbName).child(encodedEmail).getValue(Users.class);
 
-                    if(usersData.getEmail().equals(email) && usersData.getPassword().equals(password)){
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(LoginActivity.this,"Log in Successful", Toast.LENGTH_SHORT).show();
-                        finish();
-                        if(parentDbName.equals("Users")) {
+                        if (usersData.getEmail().equals(email) && usersData.getPassword().equals(password)) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this, "Log in Successful", Toast.LENGTH_SHORT).show();
+                            finish();
+
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            prevalent.currentOnlineUser=usersData;
+                            prevalent.currentOnlineUser = usersData;
                             startActivity(intent);
+
                         }
-                        else if(parentDbName.equals("Admins")){
-                            Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
-                            startActivity(intent);
+                        else {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this, "Credentials are Incorrect", Toast.LENGTH_SHORT).show();
                         }
                     }
-                    else{
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(LoginActivity.this, "Credentials are Incorrect", Toast.LENGTH_SHORT).show();
+                    else if(parentDbName.equals("Admins")){
+                        Admins adminsData = dataSnapshot.child(parentDbName).child(encodedEmail).getValue(Admins.class);
+
+                        if (adminsData.getEmail().equals(email) && adminsData.getPassword().equals(password)) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                            Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                            prevalent.currentOnlineAdmin = adminsData;
+                            startActivity(intent);
+
+                        }
+                        else {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this, "Credentials are Incorrect", Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
 
 

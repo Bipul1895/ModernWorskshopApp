@@ -157,8 +157,6 @@ public class SettingsActivity extends AppCompatActivity {
             uploadImage();
         }
 
-
-
     }
 
     private void uploadImage() {
