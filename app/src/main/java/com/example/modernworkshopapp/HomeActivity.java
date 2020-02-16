@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.example.modernworkshopapp.Prevalent.prevalent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
 import android.view.View;
@@ -50,7 +49,7 @@ public class HomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(HomeActivity.this, PlaceOrderActivity.class);
+                Intent intent=new Intent(HomeActivity.this, AddOrderToCart.class);
                 startActivity(intent);
             }
         });
@@ -110,7 +109,8 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_cart) {
-
+            Intent intent=new Intent(HomeActivity.this, UserCartList.class);
+            startActivity(intent);
         }
         else if (id == R.id.nav_curr_orders) {
 

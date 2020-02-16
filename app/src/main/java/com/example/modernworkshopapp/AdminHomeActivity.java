@@ -67,11 +67,20 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter = new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, int position, @NonNull AdminOrders model) {
+            protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, int position, @NonNull final AdminOrders model) {
                 holder.userName.setText("Name : " + model.getName());
                 holder.userEmail.setText("Email : " + model.getEmail());
                 //for price
                 holder.userDateTime.setText("Date and Time : " + model.getDate() + "  " + model.getTime());
+
+                holder.showOrderButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent=new Intent(AdminHomeActivity.this, AdminViewOrderActivity.class);
+                        intent.putExtra("UID", model.getPhone());
+                        startActivity(intent);
+                    }
+                });
 
             }
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".PlaceOrderActivity">
+    tools:context=".AddOrderToCart">
 
     <Button
         android:id="@+id/choose_button"
@@ -38,8 +38,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:layout_alignParentLeft="true"
-        android:visibility="invisible"/>
-
+        android:visibility="gone"/>
 
 
     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
@@ -56,7 +55,23 @@
         ></com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
 
     <Button
-        android:id="@+id/order_button"
+        android:id="@+id/add_to_cart_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttons"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/order_quantity_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:text="Add To Cart"
+        android:textColor="@android:color/white"
+        android:textSize="12dp"/>
+
+    <Button
+        android:id="@+id/go_to_cart_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/buttons"
@@ -64,13 +79,14 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/order_quantity_button"
+        android:layout_below="@id/add_to_cart_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:padding="5dp"
-        android:text="Order"
+        android:text="Go to Cart for Checkout"
         android:textColor="@android:color/white"
-        android:textSize="12dp"/>
+        android:textSize="12dp"
+        />
 
 
 </LinearLayout>

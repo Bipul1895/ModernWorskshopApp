@@ -7,10 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -32,10 +30,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class PlaceOrderActivity extends AppCompatActivity {
+public class AddOrderToCart extends AppCompatActivity {
 
     private ImageView imageView;
-    private Button chooseFileButton, orderButton;
+    private Button chooseFileButton, addToCartButton, checkOutButton;
     private ElegantNumberButton numberButton;
     private ProgressBar progressBar;
 
@@ -53,18 +51,19 @@ public class PlaceOrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_order);
+        setContentView(R.layout.activity_add_order_to_cart);
 
         imageView=findViewById(R.id.order_image_view);
 //        countOfOrder=findViewById(R.id.number_of_pdts_et);
         numberButton=findViewById(R.id.order_quantity_button);
         chooseFileButton=findViewById(R.id.choose_button);
-        orderButton=findViewById(R.id.order_button);
+        addToCartButton=findViewById(R.id.add_to_cart_button);
+        checkOutButton=findViewById(R.id.go_to_cart_button);
         progressBar=findViewById(R.id.order_progress_bar);
 
         orderImageRef= FirebaseStorage.getInstance().getReference().child("Order images");
 
-        orderRef= FirebaseDatabase.getInstance().getReference().child("Orders");
+        orderRef= FirebaseDatabase.getInstance().getReference().child("Cart List");
 
         chooseFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,21 +72,29 @@ public class PlaceOrderActivity extends AppCompatActivity {
             }
         });
 
-        orderButton.setOnClickListener(new View.OnClickListener() {
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendOrder();
+                addToCart();
+            }
+        });
+
+        checkOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(AddOrderToCart.this, UserCartList.class);
+                startActivity(intent);
             }
         });
 
 
     }
 
-    private void sendOrder() {
+    private void addToCart() {
 
 
         if(imageUri==null){
-            Toast.makeText(PlaceOrderActivity.this, "Please select your file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddOrderToCart.this, "Please select your file", Toast.LENGTH_SHORT).show();
         }
         else{
 
@@ -119,13 +126,12 @@ public class PlaceOrderActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 progressBar.setVisibility(View.GONE);
                 String message=e.toString();
-                Toast.makeText(PlaceOrderActivity.this, "Error : " + message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddOrderToCart.this, "Error : " + message, Toast.LENGTH_SHORT).show();
 
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(PlaceOrderActivity.this, "Order placed successfully", Toast.LENGTH_SHORT).show();
 
                 Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -145,10 +151,15 @@ public class PlaceOrderActivity extends AppCompatActivity {
 
                             downloadImageUrl=task.getResult().toString();
 
-                            Toast.makeText(PlaceOrderActivity.this, "Getting order image Url", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(AddOrderToCart.this, "Getting order image Url", Toast.LENGTH_SHORT).show();
 
                             SaveOrderInfoToDatabase();
 
+
+                        }
+                        else{
+
+                            Toast.makeText(AddOrderToCart.this, "Error loading image, try again", Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -163,34 +174,25 @@ public class PlaceOrderActivity extends AppCompatActivity {
 
         HashMap<String, Object> orderMap = new HashMap<>();
 
-//        orderMap.put("oid", productRandomKey);
-        orderMap.put("name", prevalent.currentOnlineUser.getName());
-        orderMap.put("email", prevalent.currentOnlineUser.getEmail());
-        orderMap.put("phone", prevalent.currentOnlineUser.getPhone());
+        orderMap.put("pid", productRandomKey);
         orderMap.put("date", saveCurrentDate);
         orderMap.put("time", saveCurrentTime);
         orderMap.put("image", downloadImageUrl);
         orderMap.put("quantity", numberButton.getNumber());
-        orderMap.put("status", "not viewed");
 
-        orderRef.child(prevalent.currentOnlineUser.getPhone()).updateChildren(orderMap)
+        orderRef.child(prevalent.currentOnlineUser.getPhone()).child("WishList")
+                .child(productRandomKey).updateChildren(orderMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(PlaceOrderActivity.this, "Order placed Successfully", Toast.LENGTH_SHORT).show();
-
-                            Intent intent=new Intent(PlaceOrderActivity.this, HomeActivity.class);
-                            startActivity(intent);
-
-                            finish();
-
+                            Toast.makeText(AddOrderToCart.this, "Added To Cart List", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             progressBar.setVisibility(View.GONE);
                             String message=task.getException().toString();
-                            Toast.makeText(PlaceOrderActivity.this, "Error : " + message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOrderToCart.this, "Network Problem, Please try again" + message, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
