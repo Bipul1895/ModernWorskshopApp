@@ -172,7 +172,7 @@ public class AddOrderToCart extends AppCompatActivity {
 
     private void SaveOrderInfoToDatabase() {
 
-        HashMap<String, Object> orderMap = new HashMap<>();
+        final HashMap<String, Object> orderMap = new HashMap<>();
 
         orderMap.put("pid", productRandomKey);
         orderMap.put("date", saveCurrentDate);
@@ -180,14 +180,32 @@ public class AddOrderToCart extends AppCompatActivity {
         orderMap.put("image", downloadImageUrl);
         orderMap.put("quantity", numberButton.getNumber());
 
-        orderRef.child(prevalent.currentOnlineUser.getPhone()).child("WishList")
+        orderRef.child("User View").child(prevalent.currentOnlineUser.getPhone()).child("WishList")
                 .child(productRandomKey).updateChildren(orderMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(AddOrderToCart.this, "Added To Cart List", Toast.LENGTH_SHORT).show();
+                            orderRef.child("Admin View").child(prevalent.currentOnlineUser.getPhone()).child("WishList")
+                                    .child(productRandomKey).updateChildren(orderMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(AddOrderToCart.this, "Added to Cart Successfully", Toast.LENGTH_SHORT).show();
+
+                                                progressBar.setVisibility(View.GONE);
+                                                Toast.makeText(AddOrderToCart.this, "Added To Cart List", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                            else{
+                                                progressBar.setVisibility(View.GONE);
+                                                String message=task.getException().toString();
+                                                Toast.makeText(AddOrderToCart.this, "Network Problem, Please try again" + message, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
                         }
                         else{
                             progressBar.setVisibility(View.GONE);

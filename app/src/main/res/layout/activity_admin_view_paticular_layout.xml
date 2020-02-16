@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:elevation="15dp">
+
+    <RelativeLayout
+        android:id="@+id/admin_order_items_rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/admin_order_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quantity"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+
+        <ImageView
+            android:id="@+id/admin_file_img_view"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@+id/admin_order_quantity"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="2dp"
+            />
+
+        <Button
+            android:id="@+id/admin_view_particular_order_download_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/buttons"
+            android:padding="2dp"
+            android:text="Download File"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="15dp"
+            android:layout_below="@+id/admin_file_img_view"/>
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

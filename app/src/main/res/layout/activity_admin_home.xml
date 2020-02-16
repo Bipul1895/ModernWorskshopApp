@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AdminHomeActivity">
 
-    <RelativeLayout
-        android:id="@+id/rel_layout_2"
+    <Button
+        android:id="@+id/admin_new_orders_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark">
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttons"
+        android:padding="20dp"
+        android:text="New Orders"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/new_order_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="New Orders"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"></TextView>
-
-        <Button
-            android:id="@+id/admin_logout_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/new_order_tv"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/buttons"
-            android:padding="2dp"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/order_list_recycler_view"
+    <Button
+        android:id="@+id/admin_manage_workshops_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rel_layout_2"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttons"
+        android:padding="20dp"
+        android:text="Manage Workshops"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/admin_logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttons"
+        android:padding="20dp"
+        android:text="Logout"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 
-
-</RelativeLayout>
+</LinearLayout>

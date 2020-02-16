@@ -24,9 +24,7 @@ import io.paperdb.Paper;
 
 public class AdminHomeActivity extends AppCompatActivity {
 
-   private RecyclerView ordersList;
-   private DatabaseReference orderRef;
-   private Button logoutButton;
+   private Button logoutButton, checkNewOrderButton, manageWorkShopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +34,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 //        Toast.makeText(this, "Welcome admin", Toast.LENGTH_SHORT).show();
 
         logoutButton=findViewById(R.id.admin_logout_button);
-
-        orderRef= FirebaseDatabase.getInstance().getReference().child("Orders");
-
-        ordersList=findViewById(R.id.order_list_recycler_view);
-        ordersList.setLayoutManager(new LinearLayoutManager(this));
+        checkNewOrderButton=findViewById(R.id.admin_new_orders_button);
+        manageWorkShopButton=findViewById(R.id.admin_manage_workshops_button);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,67 +49,17 @@ public class AdminHomeActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerOptions<AdminOrders> options = new FirebaseRecyclerOptions.Builder<AdminOrders>()
-                .setQuery(orderRef, AdminOrders.class).build();
-
-        FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter = new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
+        checkNewOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, int position, @NonNull final AdminOrders model) {
-                holder.userName.setText("Name : " + model.getName());
-                holder.userEmail.setText("Email : " + model.getEmail());
-                //for price
-                holder.userDateTime.setText("Date and Time : " + model.getDate() + "  " + model.getTime());
-
-                holder.showOrderButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent=new Intent(AdminHomeActivity.this, AdminViewOrderActivity.class);
-                        intent.putExtra("UID", model.getPhone());
-                        startActivity(intent);
-                    }
-                });
-
+            public void onClick(View view) {
+                Intent intent=new Intent(AdminHomeActivity.this, AdminNewOrderActivity.class);
+                startActivity(intent);
             }
+        });
 
-            @NonNull
-            @Override
-            public AdminOrdersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.orders_layout, parent,false);
-                return new AdminOrdersViewHolder(view);
-            }
-        };
-
-        ordersList.setAdapter(adapter);
-        adapter.startListening();
 
     }
 
-    public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder{
-
-        public TextView userName, userEmail, userTotalPrice, userDateTime;
-        public Button showOrderButton;
-
-        public AdminOrdersViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            userName=itemView.findViewById(R.id.order_user_name);
-            userEmail=itemView.findViewById(R.id.order_email_address);
-            userTotalPrice=itemView.findViewById(R.id.order_total_price);
-            userDateTime=itemView.findViewById(R.id.order_date_time);
-            showOrderButton=itemView.findViewById(R.id.show_order_button);
-
-
-
-        }
-    }
 
 
 }

@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserCartList"></activity>
-        <activity android:name=".AdminViewOrderActivity" />
+        <activity android:name=".AdminNewOrderActivity"></activity>
+        <activity android:name=".UserCartList" />
+        <activity android:name=".AdminViewParticularOrderActivity" />
         <activity android:name=".AddOrderToCart" />
         <activity
             android:name=".SettingsActivity"
