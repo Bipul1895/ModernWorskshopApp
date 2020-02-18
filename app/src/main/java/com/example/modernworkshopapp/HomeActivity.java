@@ -114,6 +114,9 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_curr_orders) {
 
+            Intent intent=new Intent(HomeActivity.this, UserViewNewOrders.class);
+            startActivity(intent);
+
         }
         else if (id == R.id.nav_past_orders) {
 

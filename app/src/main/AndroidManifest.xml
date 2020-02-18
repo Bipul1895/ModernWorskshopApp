@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AdminNewOrderActivity"></activity>
+        <activity android:name=".UserViewNewOrders"></activity>
+        <activity android:name=".AdminNewOrderActivity" />
         <activity android:name=".UserCartList" />
         <activity android:name=".AdminViewParticularOrderActivity" />
         <activity android:name=".AddOrderToCart" />
